@@ -31,10 +31,14 @@ public class TestSocket {
 
             // 建立连接后获得输出流
             OutputStream outputStream = socket.getOutputStream();
-            byte[] msg = new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x03, 0x00, 0x42, 0x00, 0x04};
+            //MBAP 报文头：事务元标识符（2个字节）协议标识符（2个字节）长度（2个字节）单元标识符（1个字节）
+            //请求PDU格式：功能码（1个字节）起始地址（2个字节）线圈数量（2个字节）
+            //响应PDU格式：功能码（1个字节）字节数（1个字节）线圈状态（N个字节）
+            byte[] msg = new byte[]{0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x00, 0x03, 0x00, 0x42, 0x00, 0x04};
             sentToServer(socket, msg);
             startKeepAliveThread(socket);
             while ((len = inputStream.read(bytes)) != -1) {
+                System.out.println("数据来自："+socket.getInetAddress()+":"+socket.getPort());
                 //注意指定编码格式，发送方和接收方一定要统一，建议使用UTF-8
                 System.out.println("数据长度：" + len + " get message from server(bytes): " + Arrays.toString(bytes));
                 System.out.println("返回数据长度：" + bytes[5]);
@@ -99,7 +103,7 @@ public class TestSocket {
             @Override
             public void run() {
                 super.run();
-                byte[] msg2 = new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x03, 0x00, 0x42, 0x00, 0x04};
+                byte[] msg2 = new byte[]{0x00, 0x01, 0x00, 0x00, 0x00, 0x06, 0x00, 0x03, 0x00, 0x42, 0x00, 0x04};
                 try {
                     keepAlive(KEEP_ALIVE_PERIOD, socket, msg2);
                 } catch (IOException ie) {

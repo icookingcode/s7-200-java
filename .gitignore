@@ -13,7 +13,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -26,6 +25,8 @@ hs_err_pid*
 
 .gitignore
 .idea/vcs.xml
+.idea/
 src/main/resources/
 src/test/
 target/generated-sources/
+/.idea/workspace.xml
